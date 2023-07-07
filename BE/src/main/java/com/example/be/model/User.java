@@ -22,7 +22,7 @@ public class User {
   private Long id;
 
   @Column
-  private String user_name;
+  private String userName;
 
   @Column
   private String password;
@@ -31,7 +31,7 @@ public class User {
   private Boolean gender;
 
   @Column
-  private String phone_number;
+  private String phoneNumber;
 
   @Column
   private String email;
@@ -42,7 +42,7 @@ public class User {
           cascade = CascadeType.ALL,
           orphanRemoval = true
   )
-  private List<UserRole> user_role = new ArrayList<>();
+  private List<UserRole> userRole = new ArrayList<>();
 
   @JsonManagedReference
   @OneToMany(

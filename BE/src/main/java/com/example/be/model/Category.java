@@ -22,7 +22,7 @@ public class Category {
   private Long id;
 
   @Column
-  private String category_name;
+  private String categoryName;
 
   @JsonManagedReference
   @OneToMany(
