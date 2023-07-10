@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -41,11 +38,11 @@ public class Bill {
   private Long late_payment_fee;
 
   @Column
-  private Boolean is_returned;
+  private Boolean isReturned;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonIgnore
-  @JoinColumn(name = "USER_ID")
+  @JoinColumn(name = "user_id")
   private User user;
 
   @JsonManagedReference

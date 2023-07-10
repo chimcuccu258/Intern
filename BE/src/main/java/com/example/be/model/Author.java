@@ -22,7 +22,7 @@ public class Author {
   private Long id;
 
   @Column
-  private String author_name;
+  private String authorName;
 
   @JsonManagedReference
   @OneToMany(
