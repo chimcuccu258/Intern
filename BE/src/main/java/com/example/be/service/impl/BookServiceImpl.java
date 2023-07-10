@@ -36,12 +36,12 @@ public class BookServiceImpl implements BookService {
     try {
       List<Book> books = bookRepository.findAll();
       List<BookResponse> bookResponses = books.stream().map(book -> new BookResponse(
-              book.getBookName(),
-              book.getInventory(),
-              book.getPrice(),
-              book.getDescription(),
-              book.getAuthor().getId(),
-              book.getCategory().getId()))
+                      book.getBookName(),
+                      book.getInventory(),
+                      book.getPrice(),
+                      book.getDescription(),
+                      book.getAuthor().getId(),
+                      book.getCategory().getId()))
               .collect(Collectors.toList());
       ListDataResponse<Object> listDataResponse = ListDataResponse.builder().message("OK")
               .data(bookResponses).build();
