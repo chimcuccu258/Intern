@@ -34,22 +34,23 @@ public class BillServiceImpl implements BillService {
     UserRepository userRepository;
     @Autowired
     BookRepository bookRepository;
+
     @Override
     public ResponseEntity<Object> getAllBills() {
         try {
             List<Bill> bills = billRepository.findAll();
             List<BillResponse> billResponses = bills.stream().map(bill -> new BillResponse(
-                    bill.getIssue_date(),
-                    bill.getExpired_date(),
-                    bill.getTotal_price(),
-                    bill.getLate_payment_fee(),
-                    bill.getIsReturned(),
-                    bill.getUser().getId()))
+                            bill.getIssue_date(),
+                            bill.getExpired_date(),
+                            bill.getTotal_price(),
+                            bill.getLate_payment_fee(),
+                            bill.getIsReturned(),
+                            bill.getUser().getId()))
                     .collect(Collectors.toList());
             ListDataResponse<Object> listDataResponse = ListDataResponse.builder().message("OK")
                     .data(billResponses).build();
             return ResponseEntity.ok(listDataResponse);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An exception occurred from the server with exception = " + e);
         }
@@ -98,5 +99,57 @@ public class BillServiceImpl implements BillService {
         return billRepository.findActiveBillByUser(user);
     }
 
+    @Override
+    public void returnBook(Long userId, Long bookId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new NotFoundException("Book not found"));
 
+        Bill activeBill = getActiveBillByUser(user);
+        if (activeBill == null) {
+            throw new NotFoundException("No active borrow bill found for the user");
+        }
+        Bill bill = billRepository.getActiveBillByUser(user);
+        List<BillDetails> billDetailsList;
+
+        BillDetails billDetailsToRemove;
+        if (bill != null) {
+            // Lấy danh sách chi tiết sách từ hóa đơn
+            billDetailsList = billRepository.getBillDetailsByBill(bill);
+            // Kiểm tra chi tiết sách trong hóa đơn
+            billDetailsToRemove = null;
+            for (BillDetails billDetails : billDetailsList) {
+                if (billDetails.getBook().getId().equals(book.getId())) {
+                    billDetailsToRemove = billDetails;
+                    break;
+                }
+            }
+        } else {
+            throw new NotFoundException("bill not found");
+        }
+
+        if (billDetailsToRemove == null) {
+            throw new NotFoundException("Book is not borrowed by the user");
+        }
+        // Xóa chi tiết sách khỏi hóa đơn
+        removeBillDetails(billDetailsToRemove);
+        // Tăng giá trị tồn kho sách
+        int newInventory = book.getInventory() + 1;
+        book.setInventory(newInventory);
+        bookRepository.save(book);
+        // Cập nhật tổng giá trị hóa đơn
+        Long bookPrice = book.getPrice();
+        int totalBorrowedBooks = billDetailsList.size() - 1;
+        Long totalPrice = new BigDecimal(bookPrice).multiply(new BigDecimal(0.2)).multiply(new BigDecimal(totalBorrowedBooks)).longValue();
+        activeBill.setTotal_price(totalPrice);
+        saveBill(activeBill);
+    }
+
+    private void saveBill(Bill activeBill) {
+    }
+
+    private void removeBillDetails(BillDetails billDetailsToRemove) {
+    }
 }
+
+
+

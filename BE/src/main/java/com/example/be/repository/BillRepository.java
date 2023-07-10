@@ -12,4 +12,5 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
 
     Bill getActiveBillByUser(User user);
 
+    List<BillDetails> getBillDetailsByBill(Bill bill);
 }
