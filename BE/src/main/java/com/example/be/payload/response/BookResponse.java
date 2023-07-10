@@ -15,5 +15,5 @@ public class BookResponse {
   private Long price;
   private String description;
   private Long authorId;
-  private Long ctgId;
+  private Long categoryId;
 }

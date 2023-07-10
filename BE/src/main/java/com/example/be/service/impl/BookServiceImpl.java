@@ -36,12 +36,12 @@ public class BookServiceImpl implements BookService {
     try {
       List<Book> books = bookRepository.findAll();
       List<BookResponse> bookResponses = books.stream().map(book -> new BookResponse(
-              book.getBookName(),
-              book.getInventory(),
-              book.getPrice(),
-              book.getDescription(),
-              book.getAuthor().getId(),
-              book.getCategory().getId()))
+                      book.getBookName(),
+                      book.getInventory(),
+                      book.getPrice(),
+                      book.getDescription(),
+                      book.getAuthor().getId(),
+                      book.getCategory().getId()))
               .collect(Collectors.toList());
       ListDataResponse<Object> listDataResponse = ListDataResponse.builder().message("OK")
               .data(bookResponses).build();
@@ -58,7 +58,7 @@ public class BookServiceImpl implements BookService {
       if (bookRepository.existsByBookName(bookRequest.getBookName())) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book already exists!");
       }
-      if (!categoryRepository.existsById(bookRequest.getCtgId())) {
+      if (!categoryRepository.existsById(bookRequest.getCategoryId())) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Category Id is not exist!");
       }
       if (!authorRepository.existsById(bookRequest.getAuthorId())) {
@@ -76,7 +76,7 @@ public class BookServiceImpl implements BookService {
       book.setAuthor(author);
       author.getBooks().add(book);
 
-      Category category = categoryRepository.getById(bookRequest.getCtgId());
+      Category category = categoryRepository.getById(bookRequest.getCategoryId());
 
       book.setCategory(category);
       category.getBooks().add(book);
@@ -91,7 +91,7 @@ public class BookServiceImpl implements BookService {
       bookResponse.setPrice(book.getPrice());
       bookResponse.setDescription(book.getDescription());
       bookResponse.setAuthorId(author.getId());
-      bookResponse.setCtgId(category.getId());
+      bookResponse.setCategoryId(category.getId());
 
       ListDataResponse<Object> listDataResponse = ListDataResponse.builder().message("OK").data(bookResponse).build();
       return ResponseEntity.status(HttpStatus.CREATED).body(listDataResponse);
@@ -128,7 +128,7 @@ public class BookServiceImpl implements BookService {
         if (bookRepository.existsByBookName(bookRequest.getBookName()) && !bookRequest.getBookName().equals(book.getBookName())) {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book already exists!");
         }
-        if (!categoryRepository.existsById(bookRequest.getCtgId())) {
+        if (!categoryRepository.existsById(bookRequest.getCategoryId())) {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Category Id is not exist!");
         }
         if (!authorRepository.existsById(bookRequest.getAuthorId())) {
@@ -145,7 +145,7 @@ public class BookServiceImpl implements BookService {
         book.setAuthor(author);
         author.getBooks().add(book);
 
-        Category category = categoryRepository.getById(bookRequest.getCtgId());
+        Category category = categoryRepository.getById(bookRequest.getCategoryId());
 
         book.setCategory(category);
         category.getBooks().add(book);
@@ -160,7 +160,7 @@ public class BookServiceImpl implements BookService {
         bookResponse.setPrice(book.getPrice());
         bookResponse.setDescription(book.getDescription());
         bookResponse.setAuthorId(author.getId());
-        bookResponse.setCtgId(category.getId());
+        bookResponse.setCategoryId(category.getId());
 
         ListDataResponse<Object> listDataResponse = ListDataResponse.builder().message("OK").data(bookResponse).build();
         return ResponseEntity.status(HttpStatus.OK).body(listDataResponse);
@@ -188,7 +188,7 @@ public class BookServiceImpl implements BookService {
         bookResponse.setPrice(book.getPrice());
         bookResponse.setDescription(book.getDescription());
         bookResponse.setAuthorId(book.getAuthor().getId());
-        bookResponse.setCtgId(book.getCategory().getId());
+        bookResponse.setCategoryId(book.getCategory().getId());
 
         ListDataResponse<Object> listDataResponse = ListDataResponse.builder().message("OK").data(bookResponse).build();
         return ResponseEntity.ok(listDataResponse);
