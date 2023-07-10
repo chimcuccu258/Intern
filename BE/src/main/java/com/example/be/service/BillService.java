@@ -23,4 +23,6 @@ public interface BillService {
     List<BillDetails> getBillDetailsByBill(Bill bill);
 
     Bill getActiveBillByUser(User user);
+
+    void returnBook(Long userId, Long bookId);
 }

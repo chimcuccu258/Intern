@@ -36,4 +36,18 @@ public class BillController {
         }
     }
 
+    @PostMapping("/{userId}/books/return/{bookId}")
+    public ResponseEntity<String> returnBook(
+            @PathVariable("userId") Long userId,
+            @PathVariable("bookId") Long bookId) {
+        try {
+            billService.returnBook(userId, bookId);
+            return ResponseEntity.ok("Book returned successfully");
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }
