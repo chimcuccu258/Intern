@@ -1,4 +1,4 @@
-package com.example.be.notfound;
+package com.example.be.notFound;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {
