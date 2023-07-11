@@ -1,4 +1,4 @@
-package com.example.be.Service;
+package com.example.be.service;
 
 import com.example.be.model.User;
 import org.springframework.http.ResponseEntity;

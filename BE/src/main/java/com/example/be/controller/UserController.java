@@ -1,9 +1,9 @@
 package com.example.be.controller;
 import com.example.be.model.User;
-import com.example.be.notFound.BadRequestException;
-import com.example.be.notFound.NotFoundException;
+import com.example.be.notfound.BadRequestException;
+import com.example.be.notfound.NotFoundException;
 import com.example.be.repository.UserRepository;
-import com.example.be.Service.UserService;
+import com.example.be.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

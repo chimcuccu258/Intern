@@ -1,4 +1,4 @@
-package com.example.be.notFound;
+package com.example.be.notfound;
 
 public class BadRequestException extends RuntimeException {
     public BadRequestException(String message) {

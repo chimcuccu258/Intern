@@ -1,11 +1,11 @@
-package com.example.be.Service.impl;
+package com.example.be.service.impl;
 
 import com.example.be.model.Role;
 import com.example.be.model.UserRole;
-import com.example.be.notFound.NotFoundException;
+import com.example.be.notfound.NotFoundException;
 import com.example.be.repository.RoleRepository;
 import com.example.be.repository.UserRepository;
-import com.example.be.Service.UserService;
+import com.example.be.service.UserService;
 import com.example.be.model.User;
 
 import org.springframework.http.HttpStatus;
