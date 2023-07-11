@@ -1,32 +1,55 @@
 package com.example.be.controller;
 
+import ch.qos.logback.core.model.Model;
 import com.example.be.model.Bill;
+
+import com.example.be.model.BillDetails;
 import com.example.be.model.Book;
 import com.example.be.notfound.NotFoundException;
 import com.example.be.service.BillService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/backend/bill")
+@RequestMapping("/bills")
 public class BillController {
-    @Autowired
-    BillService billService;
-    @GetMapping("/get-all")
-    public ResponseEntity<Object> getAllBills(){
+    private final BillService billService;
+
+    public BillController(BillService billService) {
+        this.billService = billService;
+    }
+
+    @GetMapping("/getall")
+    public List<Bill> getAllBills() {
         return billService.getAllBills();
     }
-    @GetMapping("/getbill/{id}")
-    public ResponseEntity<Object> getBillById(@PathVariable("id") Long id){
-        return billService.getBillById(id);
+
+    @GetMapping("/{billId}")
+    public Bill getBillById(@PathVariable("billId") Long billId) throws ChangeSetPersister.NotFoundException {
+        return billService.getBillById(billId);
     }
+
+    @GetMapping("/{billId}/details")
+    public ResponseEntity<List<BillDetails>> getBillDetailsByBill(@PathVariable("billId") Long billId) {
+        try {
+            Bill bill = billService.getBillById(billId);
+            List<BillDetails> billDetailsList = billService.getBillDetailsByBill(bill);
+            return ResponseEntity.ok(billDetailsList);
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping("/{billId}/books")
     public ResponseEntity<List<Book>> getBooksByBill(@PathVariable("billId") Long billId) {
         try {
-            ResponseEntity<Object> bill = billService.getBillById(billId);
+            Bill bill = billService.getBillById(billId);
             List<Book> bookList = billService.getBooksByBill(bill);
             return ResponseEntity.ok(bookList);
         } catch (NotFoundException e) {
@@ -35,7 +58,6 @@ public class BillController {
             return ResponseEntity.badRequest().build();
         }
     }
-
     @PostMapping("/{userId}/books/return/{bookId}")
     public ResponseEntity<String> returnBook(
             @PathVariable("userId") Long userId,
@@ -51,3 +73,5 @@ public class BillController {
     }
 
 }
+
+
