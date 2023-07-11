@@ -22,7 +22,7 @@ public class Book {
   private Long id;
 
   @Column
-  private String book_name;
+  private String bookName;
 
   @Column
   private Integer inventory;
